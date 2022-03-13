@@ -1,0 +1,65 @@
+Diplomamunka tervezés:
+	-Bevezetés:
+		- A feladat bemutatása, miért is csinálom
+	- Fő szöveg
+		- Architektúra bemutatása
+		- ESP32 bemutatása + FSR szenzor
+		- A use-case felírása
+		- A master - slave kapcsolat felépítése
+			- ESP-NOW
+		- Bluetooth kapcsolat
+		- Adatstruktúra
+	- Jövőben mit is kéne még
+	
+	
+	
+	esp32
+		olcsó
+		wireless communication
+		sok library
+		Arduino IDE
+		nagy mennyiségű érézkelő
+	Adatstruktúra bemutatása
+	Master - Android kapcsolat felépítése
+	Az esp-k közötti kapcsolat felépítése
+		ESP-NOW bemutatása
+		A kapcsolat felállításának menete
+	Master és Slave feladatai külön-külön
+	Mi történik amikor Android-ról megérkezik a kombináció
+	Több szálúság is interruptok
+	Jövőbeli fejlesztések
+		Power Management
+		Javított értékek és egyéb extra adatok kinyerése fáradás ideje
+		
+	
+	
+	Mi történik akkor ha rosszat ütünk meg?
+		A master tárolja a kombinációt kiküld egy lámpa ON funkciót a vörös lámpáknak
+	
+	
+	A kombinációkat el kell valahogy tárolni, hogy utána megkapja azt a telefon:
+		Melyik ütés volt lassabb, mikorra fáradt el az illető randomnál
+	
+	
+	Tárolni kell config-ba az utolsó setupot (ne kelljen minden indításkor újraindítani)
+		Le kell kezelni ha nincsen épp bekapcsolva az egyik szenzor
+		Lementjük minden kikapcs előtt
+		Mást kell küldenie start-kor az android telefonnak, valamint esp-now-on is csak fel kell tüntetni, hogy nem cold-start van
+	Le kell kezelni, ha nincs bekapcsolva szenzor amikor a MAC címét beírjuk a telefonon -> 
+		vissza kell küldeni, hogy xy nem volt elérhető, hogy a user lássa a telefonon
+	
+	Statek (byte?)
+		Started
+		Setup Done
+		RandomCombination
+		In combination
+	
+	Use-casek
+		Első bekapcsolás (Android és master megtudja hány slave valamint szenzor van, felépíti konfigot) DONE
+		Bekapcsolás tárolt konfiggal DONE
+		Random Kombináció DONE
+		Megadott kombinációK
+	
+	
+	Adatok:
+		

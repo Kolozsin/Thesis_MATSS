@@ -1,0 +1,18 @@
+diplomamunka:
+	milyen eszközök is kellenek?
+	
+	1 master ESP32
+		LIPO aksi
+		Egy kapcsoló ami ki+be kapcsolja
+		SD kártya olvasó
+		1 SD kártya
+		1 zöld LED
+	2 Slave ESP32
+		1 kapcsoló
+		LIPO
+		1 zöld LED
+		1 piros LED
+		1 FSR
+		hookup wire?
+		
+		

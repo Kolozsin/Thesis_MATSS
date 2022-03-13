@@ -1,0 +1,38 @@
+Témák:
+	Connection (ESP-k között valamint Telefonhoz):
+		ESP között:
+			Master-Slave
+				https://randomnerdtutorials.com/esp-now-many-to-one-esp32/
+			Sleeping and interrupts
+				https://lastminuteengineers.com/esp32-deep-sleep-wakeup-sources/
+		Telefonhoz:
+			https://randomnerdtutorials.com/esp32-bluetooth-classic-arduino-ide/
+	Honnan tudja az ESP, hogy hány Érzékelő is van rajta.
+		FSR az analóg szenzor, le tudjuk kérni, hogy van-e rajta érték
+	Hogyan olvassuk le a nyomásérzékelőket egy Slave-n (Nov 11-re csak egy slave szenzormodult tudok valszeg megcsinálni)
+	Több mag hasznosítása:
+		https://randomnerdtutorials.com/esp32-dual-core-arduino-ide/
+		Két task indítása setup-kor és akkor azokba igazából loopolhat
+		
+	
+	Hit-eknek a tárolása/ feldolgozása -> Csak a master lehet, hiszen Ő tudja csak egyszerre látni az összes szenzort
+	Power Management
+	Hogy kell futtatni ESP-t nem gépről hanem külső áramforrásról.
+	
+	Future:
+		Áronnal beszéltek, lehessen fáradást és egyéb dolgokat is figyelni, esetleg erő mértékét, ezeket Ő tudja, hogy mik is igazából
+		
+		0
+		
+	
+Hogy is megy? Master oldalról
+	Bekapcs
+	Bluetooth Telefonhoz
+	Telefon leküldi a MAC címeket a masterhez
+	A master kiküldi az elsőre a Parancsot (Testing).
+			Slave:
+				Egyesével felvillantja az érzékelőit és várja amíg meg nem érintik. -> üzenet master-nek.
+				Ha végére ért ad egy test vége msg-et.
+	Master letárolja az érzékelőket adott Slave-hez !! <- 
+	Ismétlés N-szer (MAC címek hossza)
+	

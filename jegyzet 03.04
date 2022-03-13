@@ -1,0 +1,33 @@
+Diplomamunka jegyzet 03.05
+Statek
+	Szenzormodul:
+		OFF:
+			Kapcsoló átkapcsolásával lép át az Init-be
+			Bármikor a kapcsoló átkapcsolása OFF-ba vissza jut
+			Felkapcsolja a piros LED-et
+		Init: (Legyen-e több érzékelő szenzormodulonként?, teszt ütés?*)
+			Itt várakozik a Master pingjére
+			Miután megkapta a Pinget lementi a master MAC-jét
+			Zöld LED felvillantása, majd lekapcs mindkettőt
+			Ezután átáll READY-be
+		Ready:
+			Itt várja a Master-től az ütésfigyelés parancsot
+		Wait for action:
+			Megérkezik a parancs
+			Felkapcsol a ZÖLD LED
+			Elindul az óra
+			Amennyiben az FSR-en nagy mértékű változás történik akkor ZÖLD LED lekapcs
+			Master-nak küldi az időt (Hit-Start ==> mennyi idő telt el)
+			READY-be áll át.
+		
+			
+			
+			*Teszt ütés: Amikor megvan a ping akkor várjunk-e egy ütést rá, majd akkor küldjünk acknowledge-et?
+			
+	Főmodul:
+		OFF
+			Kapcsoló átkapcsolásával lép át az Init-be
+			Bármikor a kapcsoló átkapcsolása OFF-ba vissza jut
+			Felkapcsolja a piros LED-et
+		Init
+			
