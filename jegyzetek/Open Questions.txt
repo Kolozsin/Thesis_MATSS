@@ -1,0 +1,6 @@
+Kérdések:
+	- Load Cell-ekkel esetleg lehet-e erőt mérni? Amiket én láttam, azok sajnos elég kis N-t képesek csak, rúgások kb ~900kg-ot is elérik
+	- Strain Gauge esetleg a tartó oszlopon a Load Cell helyett? Kell-e valamilyen pontos érték, vagy elég-e mondjuk kategorizálni 1-10-es osztályokba?
+	- Kell-e külön óra, vagy az esp belső órája elegendőnek bizonyul? --> Erről érdemes-e írni?
+	
+	
