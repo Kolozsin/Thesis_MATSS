@@ -1,0 +1,2 @@
+DOC-UUID
+UUID generálás a szervicek-nek! KÉne egy olyan algoritmus ami kiskarakterszámú szavakból legenerál egy UUID-t. Azért lenne fontos, hogy a user-nek ne kelljen hosszu láncokat beírni a párosításkor. Ez akár mehetne a Bluetooth-hoz is, hiszen ott van használva.

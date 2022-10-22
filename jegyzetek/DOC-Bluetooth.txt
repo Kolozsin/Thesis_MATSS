@@ -6,5 +6,48 @@ Eredetileg a Nokia hozta létre 2006-ban Wibree néven később a Bluetooth 4.0-
 GAP: Generic Access Profile egy keretrendszer ami az eszközök felfedezését, kapcsolat biztonságát, valamint a hálózat topológiájának felépítését foglalja magában. Négy különböző kapcsolatot ír le, ezek az: Broadcaster (adott időnként küld csomagokat), Peripheral (Slave role, optimalizált, hogy a legkevesebb energiát fogyassza), Observer (Figyeli a Broadcaster-eket és a küldött csomagjaikat), Central (Peripheral másik oldala, ő a master, akár több eszközhöz is csatlakozhat egyszerre)
 Ahhoz, hogy a két BLE eszköz tudjon kommunikálni egymással Generic ATTribute Profile-okat röviden GATT-okat használunk. Ezek megszabják hogyan is történik az adatmozgás Services illetve Characteristics-en keresztül. Ez Attribute Protocol (ATT)-t használ ami egy általános adat protokoll, ami képes egy táblába Services-eket valamint Charactersitics-eket tárolni a hozzájuk tartozó adatokkal együtt.
 Implementáció:
+Az ESP32 rendelkezik mind a két típusú Bluetooth implementációval, illetve képes mind a szerver mind a kliens szerepét felvenni. Mivel a dolgozat eszközei külső akkumulátorról működnek ezért az alacsonyabb energiát használó BLE-t választottam az implementáláskor. Az ESP32 egy ESP32 BLE könyvtár használatával képes elérni ezeket a funkciókat az Arduino IDE-n belül. Ennek eléréséhez elegendő ha az ESP32 telepítve van az Arduino IDE-ben.
+
+#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+
+Ezeknek a segítségével létrejön a service valamint a characteristic. Ezután nyitni kell egy portot neki:
+
+Serial.begin(115200);
+Majd elnevezni az eszközt, hogy a külvilág is fel tudja fedezni.
+BLEDevice::init("MATTS_Thesis"); 
+Majd létrehozzuk a szervert (Hogy miért is szerver az vagy itt vagy az energiafogyasztás részben taglalva van):
+BLEServer *pServer = BLEDevice::createServer();
+BLEService *pService = pServer->createService(SERVICE_UUID);
+
+Ezután a characteristic létrehozása jön, a tulajdonságainak meghatározásával együtt (írható/olvasható)
+BLECharacteristic *pCharacteristic = pService->createCharacteristic(
+                                     CHARACTERISTIC_UUID,
+                                     BLECharacteristic::PROPERTY_READ |
+                                     BLECharacteristic::PROPERTY_WRITE
+                                     );
+Ezután az adott characteristic-nek megadjuk az értékét, amit a kliensek scannel-hetnek és ennek megfelelően elindulhat a kommunikáció.									 
+pCharacteristic->setValue("BLE server Ready");
+Majd ezután elindulhat a kiajánlás indítása.
+BLEAdvertising *pAdvertising = pServer->getAdvertising();
+pAdvertising->start();
+
+Ekkor a Telefon ami Bluetoot kapcsolatot akar létrehozni láthatja az eszközt (MATTS_Thesis) valamint, hogy ez az eszköz jelenleg futtat egy service-t (SERVICE_UUID). Ezen a Service-en belül pedig van egy karakterisztika (CHARACTERISTIC_UUID) aminek a jelenlegi értéke: "BLE server Ready". Ezt képes olvasni valamint módosítani is.
+Itt érdemes nagyban gondolkozva megadni egy UUID-t a MATTS_Thesis helyett (mi van ha több készülék egy dojoban?)
+
+
+
+
+Hogyan implementáljuk az android oldalon?
+Kell természetesen a permission a manifest fájlban
+A fő class a BluetoothAdapter -> Ez add nekünk egy BluetoothLeScanner-t. Ha ez megvan akkor képesek vagyunk kezdeni a startScan() metódussal, aminek be kell adni egy callback-et (ez egy ScanCallback class kell legyen, érdemes inline megoldani az onScanResult megadásával). Itt lehet filterezni is ScanFilter + ScanSettings-el 
+Csatlakozás:  BluetoothDevice class a fő (ez szereztük a scan-el)
+https://developer.android.com/guide/topics/connectivity/bluetooth/connect-gatt-server
+Létrehozunk egy BLEService-t ami extendeli a Service class-t.
+Connection lezárása mindenképp fontos az activity elhagyásakor.
+
+
+
 A projekt folyamán az energiafogyasztás 
 Links:  https://en.wikipedia.org/wiki/Frequency-hopping_spread_spectrum https://en.wikipedia.org/wiki/Bluetooth https://www.cardinalpeak.com/blog/what-is-ble-and-how-do-its-related-gap-and-gatt-profiles-work
+https://developer.android.com/guide/topics/connectivity/bluetooth/connect-gatt-server

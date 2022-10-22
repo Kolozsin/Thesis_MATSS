@@ -1,0 +1,26 @@
+Scheduling:
+	Április 3-tól nézve
+	április 27-ig jelentkezni
+	3.5 weeks
+	utolsó hétre csak a formázás kéne maradjon (2.5 nap)
+	
+	3 hét maradt csak rá --> ~4x3 nap --> ebből 2x3 hétvége
+	Hétvégén lehet ~3 óra
+	nem hétévégn ~1 óra
+	
+	~18 óra hétvége
+	~ 6 óra hétközben
+	
+	~ 24 óra összesen
+	
+	Issuek jelenleg:
+		Wiring  ~ 1óra
+		System functions  ~ 
+		Energy Management ~ 2 óra
+		ESP-NOW rework ~ 2 óra
+		ESP32 ~ Android   ~ 1 óra
+		System overview upgrade  ~ 1 óra
+		Bluetooth docs ~ half done ~ 1óra
+		
+	~8 óra a jelenlegi issue? 
+	

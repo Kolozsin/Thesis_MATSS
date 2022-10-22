@@ -1,0 +1,3 @@
+DOC-Energy Management:
+	-Ezt a szoftveres limitálással érhetjük el, pl CPU clock levételével:
+	-Külső kristály használatával is lehet ilyet elvileg (de akkor annak a krisztálynak kéne extra áram nem?? utánanézni)

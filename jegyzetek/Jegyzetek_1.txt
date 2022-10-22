@@ -1,0 +1,55 @@
+Table of content:
+	- Drótozás, használt elemek [Itt képet csinálni az eszközről]
+	- Logolás megoldása ESP32-n [Ezt csak amiatt, hogy legyen debug-ra lehetőség, masteren];
+	- Bluetooth ESP32  -- miért is nem ezt fogom végül használni?	
+	- Energy Management esp32-n [SLAVE van csak LIPO-n, a master-t inkább rendesen bedugjuk]
+	- Használható-e a többszálúság a MASTER esetében? [Egy szál a webhostolást, másik a parancsokat végzi]
+	- Android alkalmazás [ez ugye csak egy API hívásokat végző frontend]
+	- Funkció lista (tesztek amiknek menniük kell (TDD))  !Ebből fog kiesni még task!
+
+	
+	
+Főbb funkciók amik alapján el tudunk indulni [Ezekre lehet mindegyikre fancy ábrákat csinálni]:
+	- Tudnia kell logolni az eseményeket
+	- Tudnia kell érzékelni az ütést [milyen elemek miket is csinálnak]
+	- Létre tud jönni kapcsolat Android és ESP között
+	- Képes kommunikálni 2 ESP egymással NOW-on keresztül
+	- Képes a master task manager-ként működni
+	- A telefonon képesek vagyunk "felépíteni" (összehúzni) a különböző addolt eszközöket.
+	- A telefonon létre tudunk hozni kombinációt valamint elindítani a randomot is.
+	- A telefonról képesek vagyunk megállítani bármikor a kombinációt.
+	- A master képes lementeni a config-ot, hogy újrainduláskor betölthesse és skippelhető legyen a configolás
+	- 
+	
+	
+	
+	Tudnia kell logolni az eseményeket (valamint state-t menteni)
+		- Hogyan érjük el a háttértárat (miért nem jó a ROM? [kevés])
+		- Hogyan olvashatunk le SD kártyáról adatot/menthetünk rá
+		- Milyen módszert használunk a logolásra (DB?? JSON?? TXT?? WHY [json])
+		- Mit is akarunk lementeni és hová?
+		- Egyből logolunk-e a háttértárra, vagy csak queue-ba és időnként?
+		- Miket is akarunk betölteni induláskor?
+		- Mikor küldjük át az adatokat innen?
+	
+
+	Tudnia kell érzékelni az ütést
+		- Képes visszajelezni kontaktot, amennyiben X értéknél magasabbat ütöttünk
+		- Érdekes, hogy egyből kezeljük-e le, majd utána kapcsoljuk le az érzékelőt, vagy nézzük meg a 	max értéket?
+	
+	Létre tud jönni kapcsolat Android és ESP között
+		- Bluetooth BLE service ESP-n? amire tud írni/olvasni a telefon
+		- ESP webhostolás [ez lett végül]
+	
+	Képes kommunikálni 2 ESP egymással NOW-on keresztül
+		- Hogy működik az ESP-NOW? 
+		- Hogyan jön létre a kapcsolat?
+			| Mik kellenek hozzá? (kvázi csak a slave MAC címe
+		- Mi alapján működik a master-slave kapcsolat?
+		
+		
+MASTER MAC:  	AC:67:B2:53:88:CD
+KLIENS MAC:		10:97:BD:E2:D6:B8
+
+
+	
