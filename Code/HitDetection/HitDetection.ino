@@ -9,7 +9,7 @@
 long milis = 0;
 int startDetection = 0;
 uint8_t broadcastAddress[6];
-int id = 0;
+int id = -1;
 int32_t channel = 0;
 
 
@@ -40,38 +40,40 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
 // Will need a killswitch as well in the future (for example string fn in the message or something like that)
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
-  
+  memcpy(&myData,incomingData,sizeof(myData));   //saves incomingData to the local struct
   
   esp_now_peer_info_t peerInfo = {};
-  channel = 0;
 
-  memcpy(&myData,incomingData,sizeof(myData));
+  //This should only run on a fresh start
+  if(id<0){
+    id = myData.id;   
+    uint8_t clientAddress[6];
 
-  id = myData.id; 
+    //Copying the String mac to the uint8_t format supported by esp-now
+    for(int i = 0; myData.mac[i]!= 0; i++){
+      char bytee[3];
+      strncpy(bytee, &myData.mac[i*2], 2);  
+      bytee[2] = 0;   
+      clientAddress[i] = strtol(bytee, NULL, 16);    
+    } 
+    
+    memcpy(&peerInfo.peer_addr, clientAddress, sizeof(clientAddress));
+    memcpy(&broadcastAddress, clientAddress, sizeof(clientAddress)); 
   
-  uint8_t clientAddress[6];
-  for(int i = 0; myData.mac[i]!= 0; i++){
-    char bytee[3];
-    strncpy(bytee, &myData.mac[i*2], 2);  // copy 2 characters
-    bytee[2] = 0;   
-    clientAddress[i] = strtol(bytee, NULL, 16);    
-  }  
-  
-  memcpy(&peerInfo.peer_addr, clientAddress, sizeof(clientAddress));
-  memcpy(&broadcastAddress, clientAddress, sizeof(clientAddress)); 
-
-  char macStr[18];
-  Serial.print("MAC ADDED:\t");
-  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
-           clientAddress[0], clientAddress[1], clientAddress[2], clientAddress[3], clientAddress[4], clientAddress[5]);
-  Serial.println(macStr);
-  
-  peerInfo.encrypt = false;
-  peerInfo.channel = channel;
-  peerInfo.ifidx = WIFI_IF_AP;
-  if (esp_now_add_peer(&peerInfo) != ESP_OK) {
-    Serial.println("Failed to add peer");  
+    char macStr[18];
+    Serial.print("MAC ADDED:\t");
+    snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
+             clientAddress[0], clientAddress[1], clientAddress[2], clientAddress[3], clientAddress[4], clientAddress[5]);
+    Serial.println(macStr);
+    
+    peerInfo.encrypt = false;
+    peerInfo.channel = channel;
+    peerInfo.ifidx = WIFI_IF_AP;
+    if (esp_now_add_peer(&peerInfo) != ESP_OK) {
+      Serial.println("Failed to add peer");  
+    }
   }
+ 
   startDetection = 1;  
 }
 
@@ -83,11 +85,11 @@ void setup() {
   pinMode(LED_2, OUTPUT);
   WiFi.mode(WIFI_AP_STA);
   if (esp_now_init() != ESP_OK) {
-    Serial.println("Error initializing ESP-NOW \n restart has started...");
+    Serial.println("Error initializing ESP-NOW \n Restart has started...");
     ESP.restart();
   }
   else {
-    Serial.println("SUCCESS ESP-now");
+    Serial.println("ESP-NOW has been succesfully turned on");
   }
   esp_now_register_send_cb(OnDataSent);
   esp_now_register_recv_cb(OnDataRecv);
