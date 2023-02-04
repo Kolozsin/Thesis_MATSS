@@ -25,11 +25,15 @@ struct_message myData = {};
 long hitDetection() {
   milis = millis();
   digitalWrite(LED_1, HIGH);
-  while ((analogRead(POT) < 2000)){}
+  while ((analogRead(POT) < 2000)) {}
   milis = millis() - milis;
   digitalWrite(LED_1, LOW);
   digitalWrite(LED_2, HIGH);
   return milis;
+}
+
+void IRAM_ATTR hitDetected() {
+
 }
 
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
@@ -40,41 +44,43 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
 // Will need a killswitch as well in the future (for example string fn in the message or something like that)
 void OnDataRecv(const uint8_t * mac_addr, const uint8_t *incomingData, int len) {
-  memcpy(&myData,incomingData,sizeof(myData));   //saves incomingData to the local struct
-  
+  memcpy(&myData, incomingData, sizeof(myData)); //saves incomingData to the local struct
+
   esp_now_peer_info_t peerInfo = {};
 
   //This should only run on a fresh start
-  if(id<0){
-    id = myData.id;   
+  if (id < 0) {
+    id = myData.id;
     uint8_t clientAddress[6];
 
     //Copying the String mac to the uint8_t format supported by esp-now
-    for(int i = 0; myData.mac[i]!= 0; i++){
+    for (int i = 0; myData.mac[i] != 0; i++) {
       char bytee[3];
-      strncpy(bytee, &myData.mac[i*2], 2);  
-      bytee[2] = 0;   
-      clientAddress[i] = strtol(bytee, NULL, 16);    
-    } 
-    
+      strncpy(bytee, &myData.mac[i * 2], 2);
+      bytee[2] = 0;
+      clientAddress[i] = strtol(bytee, NULL, 16);
+    }
+
     memcpy(&peerInfo.peer_addr, clientAddress, sizeof(clientAddress));
-    memcpy(&broadcastAddress, clientAddress, sizeof(clientAddress)); 
-  
+    memcpy(&broadcastAddress, clientAddress, sizeof(clientAddress));
+
     char macStr[18];
     Serial.print("MAC ADDED:\t");
     snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x",
              clientAddress[0], clientAddress[1], clientAddress[2], clientAddress[3], clientAddress[4], clientAddress[5]);
     Serial.println(macStr);
-    
+
     peerInfo.encrypt = false;
     peerInfo.channel = channel;
     peerInfo.ifidx = WIFI_IF_AP;
     if (esp_now_add_peer(&peerInfo) != ESP_OK) {
-      Serial.println("Failed to add peer");  
+      Serial.println("Failed to add peer");
+      return;
     }
+    Serial.println("Master has been added as a peer");
   }
- 
-  startDetection = 1;  
+
+  startDetection = 1;
 }
 
 
@@ -93,6 +99,7 @@ void setup() {
   }
   esp_now_register_send_cb(OnDataSent);
   esp_now_register_recv_cb(OnDataRecv);
+  attachInterrupt(POT, isr, RISING);
 }
 
 void loop() {
@@ -106,13 +113,14 @@ void loop() {
     Serial.println(myData.milis);
     esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
     if (result == ESP_OK) {
-      Serial.println("Sent with success"); 
+      Serial.println("Sent with success");
+      //This could be done on a new Task.
       delay(50);
-      digitalWrite(LED_2, LOW);     
+      digitalWrite(LED_2, LOW);
     }
     else {
       Serial.println(esp_err_to_name(result));
-      Serial.println("Error sending the data");
+      Serial.println("Error sending the data to ");
     }
   }
 }

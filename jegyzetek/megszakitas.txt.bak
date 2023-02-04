@@ -1,0 +1,33 @@
+Megszakításos érzékelés:
+A megszakítást lehet kötni a PIN-hez amin a DATA jön a Potenciométernek, vagy az FSR-nak.
+
+attachInterrupt(digitalPinToInterrupt(GPIO), function, mode);
+
+GPIO a PIN amelyikre figyel a program
+
+function -> ez fut le amikor a megszakítás elsül
+
+mode -> 
+LOW: Elsül amennyiben LOW állapotba kerül a PIN (alacsony fesz)
+HIGH: Elsül amennyiben HIGH állapotba kerül a PIN (magas fesz)
+CHANGE: Amennyiben átáll az állapot HIGH-ból LOW-ba vagy fordítva
+FALLING: Amennyiben HIGH -> LOW
+RISING: Amennyiben LOW -> HIGH
+
+
+Nekem a szenzor HIGH-ba fog átmenni, szóval a RISING ami használható.
+
+Mivel az érzékelőt többször is leolvassuk egy ütés folyamán, (lévén az esp32 gyors processzorának) több értéken is meghívódik majd a függvény, ezért érdemes időzítővel figyelni, hogy mennyi idő telt el az első RISING metódus hívás óta, megszabva egy időintervallumot amiben nem csinál semmit a kód.
+
+if(elteltIdo < 0.3sec){
+	hitDetected = true;
+}
+
+	
+	
+	
+Azért kell minél kisebb kód mert a megszakítás miatt más kód közben nem fog lefutni, ugyanaz az érv mint amikor az esp_now-on kap üzenetet az eszköz, ott is a lekisebb számú instrukciót kell a gépnek megadni.
+EZT MEG KELL NÉZNI, HOGY TÉNYLEGESEN VAN-E ILYEN PROBLÉMA AZ FSR-NÉL.
+
+A metódusnak IRAM_ATTR kell legyen a visszatérési értékének, ez azt eredményezi, hogy a RAM-ba tárolja el a programrészletet az esp32 ezzel gyorsítva a meghívást, nem FLASH-ből kell beolvasnia.
+

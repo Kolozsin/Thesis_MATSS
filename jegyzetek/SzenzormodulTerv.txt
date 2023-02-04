@@ -1,0 +1,87 @@
+Szenzormodul:
+		#define LED_1 4
+		#define LED_2 2
+		#define POT 32
+	
+	
+	Változók:
+		activate bool;
+		currentlyActive bool;
+		newMasterAdded bool;
+		hitDetected bool;
+		messageSent bool;
+		powerDown bool;
+				
+		masterMac uint8_t;
+		
+		startMillis int;
+		hitTime int;
+		
+		myData struct_message;
+		
+	
+	Metódusok:
+	
+		ESPRecieve:
+			beállít activate true;
+			Ha nincs jelenleg MAC cím masterhez		
+				Lementi változóba a mac címet
+				beállít egy newMasterAdded  true-ra 
+				
+			Ha már van powermanagement akkor azt is felhúzni (órajelet)
+			powerDown = false;
+			
+		ESPSend callback:
+			Ha sikeres küldés:
+				HitDetected = false
+				currentlyActive = false;
+				messageSent = true;
+			
+			
+			
+		SendToMaster:
+			Ha masterMac nem nulla akkor myData elküldése esp_now_send()-el
+			
+		
+		HitDetected interruption:
+			currentHitTime = millis();
+			ha currentHitTime - hitTime > 250
+				ha startmillis != null
+					hitTime = currentHitTime - startMillis;
+				hitDetected = true;
+				
+		
+		Loop()  -> Ezeket esetleg ki lehet szervezni mind 1-1 metódusba (sőtt jobb is lenne)
+			Ha newMasterAdded akkor:
+				Átváltjuk a MAC-et rendesre
+				Addoljuk peer-t
+				newMasterAdded false-ra
+			Ha activate
+				LED1 felkapcsolása
+				startMillis = millis();
+				currentlyActive = true;
+				activate = false;
+			Ha HitDetected
+				Ha currentlyActive 
+					myData.millis = currentHitTime;
+				else
+					myData.millis = -1;
+				sendToMaster();
+			Ha messageSent
+				LED1 lekapcsolása
+				LED2 felkapcsolása
+				delay(100)
+				LED2 lekapcsolása
+				powerDown = true;
+				Proci lassítása;
+				messageSent = false;
+					
+				
+		
+		setup()
+			ESPnow init
+			intterupt attach
+			LED-ek beállítása
+			POT beállítása
+			
+		

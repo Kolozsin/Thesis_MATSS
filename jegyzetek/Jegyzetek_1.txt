@@ -1,3 +1,60 @@
+Diplomamunka felépítése
+	Bevezetés  -- Egész jó, igazából maradhat
+	
+	
+	
+	Követelményspecifikáció
+		Itt szeretnék csak az architektúrára illetve az elvárásokra fókuszálni (Első körben az elvárásokat listázni, majd utána az elemeket felsorolni és leírni, hogy miért is kell XY, melyik elvárást teljesíti, SEMMI KONKRÉT TÍPUS)
+		
+	Alternatív megoldások
+		Memória játék
+		Redflash
+	
+	Kábel nélküli kapcsolat lehetőségei
+		ZigBee
+		Bluetooth
+		WIFI
+		
+	
+	ESP-32 - Általános bemutatás, majd utána miért esett erre a választásom
+	
+	ESP-NOW bemutatása
+		Fejlesztői környezet felépítése
+	
+	A két fő edzéstípus elmagyarázása valamint a használatának elképzelése
+	
+	A rendszer kábelmentes kapcsolata a külvilággal (WEBSZERVER, mi a RESTAPI)
+	
+	A fejlesztés ütemterve
+	
+	Elvárások, tesztek amiken át kell esnie a rendszernek    (INNENTŐL KEZDVE MÁR KONKRÉT IMPLEMENTÁCIÓ VAN)
+	
+
+	
+	Az ütésdetektálás megvalósítása (KÉp a teszteszközről)
+	
+	powermang
+	
+	Irodalomjegyzék,
+	Mellékletek
+	Ábrák megírása
+	
+	
+	
+	A két edzéstípus implementálásának módja
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+
 Table of content:
 	- Drótozás, használt elemek [Itt képet csinálni az eszközről]
 	- Logolás megoldása ESP32-n [Ezt csak amiatt, hogy legyen debug-ra lehetőség, masteren];
@@ -12,14 +69,14 @@ Table of content:
 Főbb funkciók amik alapján el tudunk indulni [Ezekre lehet mindegyikre fancy ábrákat csinálni]:
 	- Tudnia kell logolni az eseményeket
 	- Tudnia kell érzékelni az ütést [milyen elemek miket is csinálnak]
+	  |Valamint visszajelezni, hogy az meg történt (másik core-on led villantás)
 	- Létre tud jönni kapcsolat Android és ESP között
 	- Képes kommunikálni 2 ESP egymással NOW-on keresztül
 	- Képes a master task manager-ként működni
 	- A telefonon képesek vagyunk "felépíteni" (összehúzni) a különböző addolt eszközöket.
 	- A telefonon létre tudunk hozni kombinációt valamint elindítani a randomot is.
 	- A telefonról képesek vagyunk megállítani bármikor a kombinációt.
-	- A master képes lementeni a config-ot, hogy újrainduláskor betölthesse és skippelhető legyen a configolás
-	- 
+	
 	
 	
 	
@@ -44,12 +101,18 @@ Főbb funkciók amik alapján el tudunk indulni [Ezekre lehet mindegyikre fancy 
 	Képes kommunikálni 2 ESP egymással NOW-on keresztül
 		- Hogy működik az ESP-NOW? 
 		- Hogyan jön létre a kapcsolat?
-			| Mik kellenek hozzá? (kvázi csak a slave MAC címe
+			| Mik kellenek hozzá? (kvázi csak a slave MAC címe)
+			| Lehetne-e használni auto-pairing-et? Igen későbbi fejlesztésnek meg lehet említeni
 		- Mi alapján működik a master-slave kapcsolat?
 		
 		
 MASTER MAC:  	AC:67:B2:53:88:CD
 KLIENS MAC:		10:97:BD:E2:D6:B8
+
+Tesztelés:
+	COM4  (jobb oldali usb)      - master
+	COM8   elosztó bill mellett  - slave
+	
 
 
 	
